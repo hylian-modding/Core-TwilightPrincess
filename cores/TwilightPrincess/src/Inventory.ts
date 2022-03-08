@@ -4,51 +4,33 @@ import { FlagManager } from 'modloader64_api/FlagManager';
 import { JSONTemplate } from 'modloader64_api/JSONTemplate';
 import { ILogger } from 'modloader64_api/IModLoaderAPI';
 import { NONAME } from 'dns';
-import { IInventoryFields, InventoryItem } from '../API/Imports';
+import { IInventoryFields, InventoryItem, InventorySlotItems, InventorySlots } from '../API/Imports';
 
 export class Inventory extends JSONTemplate implements API.IInventory {
     private emulator: IMemory;
     private instance: number = 0x8040625C;
     private slotInstance: number = 0x80406274;
 
+    private bottleID =
+        [
+            API.InventoryItem.bottle_empty,
+            API.InventoryItem.RedPotion, API.InventoryItem.MagicPotion, API.InventoryItem.BluePotion, API.InventoryItem.Milk,
+            API.InventoryItem.MilkHalf, API.InventoryItem.LanternOil, API.InventoryItem.Water, API.InventoryItem.LanternOil2,
+            API.InventoryItem.RedPotion2, API.InventoryItem.NastySoup, API.InventoryItem.HotSpringwater, API.InventoryItem.Fairy,
+            API.InventoryItem.HotSpringwater2, API.InventoryItem.LaternOil, API.InventoryItem.LaternOil2, API.InventoryItem.FairysTears,
+            API.InventoryItem.Worm, API.InventoryItem.GreatFairysTears, API.InventoryItem.BeeLarva, API.InventoryItem.RareChuJelly,
+            API.InventoryItem.RedChuJelly, API.InventoryItem.BlueChuJelly, API.InventoryItem.GreenChuJelly, API.InventoryItem.YellowChuJelly,
+            API.InventoryItem.PurpleChuJelly, API.InventoryItem.SimpleSoup, API.InventoryItem.GoodSoup, API.InventoryItem.SuperbSoup,
+        ]
+
     constructor(emu: IMemory) {
         super();
         this.emulator = emu;
     }
 
-    bottleID = [
-        API.InventoryItem.RedPotion,
-        API.InventoryItem.MagicPotion,
-        API.InventoryItem.BluePotion,
-        API.InventoryItem.Milk,
-        API.InventoryItem.MilkHalf,
-        API.InventoryItem.LanternOil,
-        API.InventoryItem.Water,
-        API.InventoryItem.LanternOil2,
-        API.InventoryItem.RedPotion2,
-        API.InventoryItem.NastySoup,
-        API.InventoryItem.HotSpringwater,
-        API.InventoryItem.Fairy,
-        API.InventoryItem.HotSpringwater2,
-        API.InventoryItem.LaternOil,
-        API.InventoryItem.LaternOil2,
-        API.InventoryItem.FairysTears,
-        API.InventoryItem.Worm,
-        API.InventoryItem.GreatFairysTears,
-        API.InventoryItem.BeeLarva,
-        API.InventoryItem.RareChuJelly,
-        API.InventoryItem.RedChuJelly,
-        API.InventoryItem.BlueChuJelly,
-        API.InventoryItem.GreenChuJelly,
-        API.InventoryItem.YellowChuJelly,
-        API.InventoryItem.PurpleChuJelly,
-        API.InventoryItem.SimpleSoup,
-        API.InventoryItem.GoodSoup,
-        API.InventoryItem.SuperbSoup,
-    ]
+
 
     jsonFields: string[] = [
-
         'galeBoomerang',
         'lantern',
         'spinner',
@@ -58,7 +40,6 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         'ballAndChain',
         'dominionRod',
         'clawshot',
-        '//doubleClawshot',
         'slingshot',
         'bottle1',
         'bottle2',
@@ -69,207 +50,269 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         'bombBag3',
         'fishingRod',
         'horseCall',
-        'dekuSeeds',
-        'arrows',
-        'bombs1',
-        'bombs2',
-        'bombs3',
-
+        'skyBook',
+        'sketch_memo',
+        'ooccoo'
     ];
+
+
+    private totalSlots: number = InventorySlots.SLOT_24;
+
+    private get itemSlots(): Buffer {
+        return this.emulator.rdramReadBuffer(this.slotInstance, this.totalSlots);
+    }
+
+    private set itemSlots(slots: Buffer) {
+        this.emulator.rdramWriteBuffer(this.slotInstance, slots)
+    }
+
+    getItem(item: API.InventorySlotItems): API.InventorySlotItems {
+        return this.itemSlots.indexOf(item) > -1 ? item : 0xFF;
+    }
+
+    addItemSlot(item: number) {
+        let slots = this.itemSlots;
+        if (slots.indexOf(item) > -1) {
+            // The item already exists.
+        } else {
+            // The item does not exist.
+            let empty: number = slots.indexOf(0xFF);
+            if (empty === -1) {
+                // No empty slots. Panic?
+            } else {
+                slots[empty] = item;
+            }
+        }
+        this.itemSlots = slots;
+    }
 
     //Inventory Slots
     get galeBoomerang(): boolean {
-        let val = this.getItem(API.InventoryItem.galeBoomerang)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.galeBoomerang)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set galeBoomerang(bool: boolean) {
         let value = bool ? API.InventoryItem.galeBoomerang : API.InventoryItem.NONE;
-        this.setItem(value);
+        this.emulator.rdramWrite8(this.instance, value);
+        if (bool) this.addItemSlot(InventorySlotItems.galeBoomerang);
     }
 
     get lantern(): boolean {
-        let val = this.getItem(API.InventoryItem.lantern)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.lantern)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set lantern(bool: boolean) {
         let value = bool ? API.InventoryItem.lantern : API.InventoryItem.NONE;
-        this.setItem(value)
+        this.emulator.rdramWrite8(this.instance + 1, value);
+        if (bool) this.addItemSlot(InventorySlotItems.lantern);
     }
 
     get spinner(): boolean {
-        let val = this.getItem(API.InventoryItem.spinner)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.spinner)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set spinner(bool: boolean) {
         let value = bool ? API.InventoryItem.spinner : API.InventoryItem.NONE;
-        this.setItem(value)
+        this.emulator.rdramWrite8(this.instance + 2, value);
+        if (bool) this.addItemSlot(InventorySlotItems.spinner);
     }
 
     get ironBoots(): boolean {
-        let val = this.getItem(API.InventoryItem.ironBoots)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.ironBoots)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set ironBoots(bool: boolean) {
         let value = bool ? API.InventoryItem.ironBoots : API.InventoryItem.NONE;
-        this.setItem(value)
+        this.emulator.rdramWrite8(this.instance + 3, value);
+        if (bool) this.addItemSlot(InventorySlotItems.ironBoots);
     }
 
     get bow(): boolean {
-        let val = this.getItem(API.InventoryItem.bow)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.bow)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set bow(bool: boolean) {
         let value = bool ? API.InventoryItem.bow : API.InventoryItem.NONE;
-        this.setItem(value)
+        this.emulator.rdramWrite8(this.instance + 4, value);
+        if (bool) this.addItemSlot(InventorySlotItems.bow);
     }
 
     get hawkeye(): boolean {
-        let val = this.getItem(API.InventoryItem.hawkeye)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.hawkeye)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set hawkeye(bool: boolean) {
         let value = bool ? API.InventoryItem.hawkeye : API.InventoryItem.NONE;
-        this.setItem(value)
+        this.emulator.rdramWrite8(this.instance + 5, value);
+        if (bool) this.addItemSlot(InventorySlotItems.hawkeye);
     }
 
     get ballAndChain(): boolean {
-        let val = this.getItem(API.InventoryItem.ballAndChain)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.ballAndChain)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set ballAndChain(bool: boolean) {
         let value = bool ? API.InventoryItem.ballAndChain : API.InventoryItem.NONE;
-        this.setItem(value)
+        this.emulator.rdramWrite8(this.instance + 6, value);
+        if (bool) this.addItemSlot(InventorySlotItems.ballAndChain);
     }
 
     get dominionRod(): boolean {
-        let val = this.getItem(API.InventoryItem.dominionRod)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.dominionRod)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set dominionRod(bool: boolean) {
         let value = bool ? API.InventoryItem.dominionRod : API.InventoryItem.NONE;
-        this.setItem(value)
+        this.emulator.rdramWrite8(this.instance + 8, value);
+        if (bool) this.addItemSlot(InventorySlotItems.dominionRod);
     }
 
     get clawshot(): API.InventoryItem {
-        return this.getItem(API.InventoryItem.clawshot);
+        let clawshot = this.emulator.rdramRead8(this.instance + 9)
+        let dblClawshot = this.emulator.rdramRead8(this.instance + 10)
+        if (dblClawshot === API.InventoryItem.doubleClawshot) return API.InventoryItem.doubleClawshot;
+        else if (clawshot === API.InventoryItem.doubleClawshot) return API.InventoryItem.clawshot;
+        return API.InventoryItem.NONE;
     }
     set clawshot(item: API.InventoryItem) {
-        if (item === API.InventoryItem.clawshot ||
-            item === API.InventoryItem.doubleClawshot) {
-            this.setItem(item);
-        }
+        if (item === API.InventoryItem.doubleClawshot) this.emulator.rdramWrite8(this.instance + 10, item);
+        else if (item === API.InventoryItem.clawshot) this.emulator.rdramWrite8(this.instance + 9, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.clawshot);
     }
 
-    get slingshot(): boolean {
-        let val = this.getItem(API.InventoryItem.slingshot)
-        return !(val === API.InventoryItem.NONE);
+    get bottle1(): API.InventoryItem {
+        let bottle = this.emulator.rdramRead8(this.instance + 11)
+        if (this.bottleID.includes(bottle)) return bottle;
+        return API.InventoryItem.NONE;
     }
-    set slingshot(bool: boolean) {
-        let value = bool ? API.InventoryItem.slingshot : API.InventoryItem.NONE;
-        this.setItem(value)
+    set bottle1(item: API.InventoryItem) {
+        if (this.bottleID.includes(item)) this.emulator.rdramWrite8(this.instance + 11, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bottle1);
     }
 
-    get bottles(): API.InventoryItem[] {
-        let bottleBuf = this.emulator.rdramReadBuffer(0x80406267, 0x4);
-        let bottleTemp: API.InventoryItem[] = [];
-        for (let i = 0; i < bottleBuf.byteLength; i++) {
-            bottleTemp[i] = bottleBuf[i];
-        }
-        return bottleTemp;
+    get bottle2(): API.InventoryItem {
+        let bottle = this.emulator.rdramRead8(this.instance + 12)
+        if (this.bottleID.includes(bottle)) return bottle;
+        return API.InventoryItem.NONE;
     }
-    set bottles(content: API.InventoryItem[]) {
-        //this.setBottle(content);
+    set bottle2(item: API.InventoryItem) {
+        if (this.bottleID.includes(item)) this.emulator.rdramWrite8(this.instance + 12, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bottle2);
+    }
+
+    get bottle3(): API.InventoryItem {
+        let bottle = this.emulator.rdramRead8(this.instance + 13)
+        if (this.bottleID.includes(bottle)) return bottle;
+        return API.InventoryItem.NONE;
+    }
+    set bottle3(item: API.InventoryItem) {
+        if (this.bottleID.includes(item)) this.emulator.rdramWrite8(this.instance + 13, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bottle3);
+    }
+
+    get bottle4(): API.InventoryItem {
+        let bottle = this.emulator.rdramRead8(this.instance + 14)
+        if (this.bottleID.includes(bottle)) return bottle;
+        return API.InventoryItem.NONE;
+    }
+    set bottle4(item: API.InventoryItem) {
+        if (this.bottleID.includes(item)) this.emulator.rdramWrite8(this.instance + 14, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bottle4);
     }
 
     get bombBag1(): API.InventoryItem {
-        if (this.getItem(API.InventoryItem.bombBug) as number !== 0xFF) return API.InventoryItem.bombBug;
-        if (this.getItem(API.InventoryItem.bombWater) as number !== 0xFF) return API.InventoryItem.bombWater;
-        if (this.getItem(API.InventoryItem.bombNormal) as number !== 0xFF) return API.InventoryItem.bombNormal;
-        return 0xFF;
+        let bomb = this.emulator.rdramRead8(this.instance + 15)
+        if (this.bottleID.includes(bomb)) return bomb;
+        return API.InventoryItem.NONE;
     }
-    set bombBag1(content: API.InventoryItem) {
-        if (content !== API.InventoryItem.bombNormal &&
-            content !== API.InventoryItem.bombWater &&
-            content !== API.InventoryItem.bombBug
-        ) {
-            return;
-        }
-        this.setItem(content);
+    set bombBag1(item: API.InventoryItem) {
+        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) this.emulator.rdramWrite8(this.instance + 14, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bombs1);
     }
 
     get bombBag2(): API.InventoryItem {
-        if (this.getItem(API.InventoryItem.bombBug) as number !== 0xFF) return API.InventoryItem.bombBug;
-        if (this.getItem(API.InventoryItem.bombWater) as number !== 0xFF) return API.InventoryItem.bombWater;
-        if (this.getItem(API.InventoryItem.bombNormal) as number !== 0xFF) return API.InventoryItem.bombNormal;
-        return 0xFF;
+        let bomb = this.emulator.rdramRead8(this.instance + 16)
+        if (this.bottleID.includes(bomb)) return bomb;
+        return API.InventoryItem.NONE;
     }
-    set bombBag2(content: API.InventoryItem) {
-        if (content !== API.InventoryItem.bombNormal &&
-            content !== API.InventoryItem.bombWater &&
-            content !== API.InventoryItem.bombBug
-        ) {
-            return;
-        }
-        this.setItem(content);
+    set bombBag2(item: API.InventoryItem) {
+        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) this.emulator.rdramWrite8(this.instance + 14, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bombs1);
     }
 
     get bombBag3(): API.InventoryItem {
-        if (this.getItem(API.InventoryItem.bombBug) as number !== 0xFF) return API.InventoryItem.bombBug;
-        if (this.getItem(API.InventoryItem.bombWater) as number !== 0xFF) return API.InventoryItem.bombWater;
-        if (this.getItem(API.InventoryItem.bombNormal) as number !== 0xFF) return API.InventoryItem.bombNormal;
-        return 0xFF;
+        let bomb = this.emulator.rdramRead8(this.instance + 17)
+        if (this.bottleID.includes(bomb)) return bomb;
+        return API.InventoryItem.NONE;
     }
-    set bombBag3(content: API.InventoryItem) {
-        if (content !== API.InventoryItem.bombNormal &&
-            content !== API.InventoryItem.bombWater &&
-            content !== API.InventoryItem.bombBug
-        ) {
-            return;
-        }
-        this.setItem(content);
+    set bombBag3(item: API.InventoryItem) {
+        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) this.emulator.rdramWrite8(this.instance + 14, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bombs1);
     }
 
-    /* get ooccoo(): boolean {
-        let val = this.getItem(API.InventorySlots.HOOKSHOT)
-        return !(val === API.InventoryItem.NONE);
+    get ooccoo(): API.InventoryItem {
+        let item = this.emulator.rdramRead8(this.instance + 18)
+        if (item === API.InventoryItem.ooccooJr) return API.InventoryItem.ooccooJr;
+        else if (item === API.InventoryItem.ooccoo) return API.InventoryItem.ooccoo;
+        return API.InventoryItem.NONE;
     }
-    set ooccoo(bool: boolean) {
-        let value = bool ? API.InventoryItem.ooccoo : API.InventoryItem.NONE;
-        this.setItem(value, API.InventorySlots.HOOKSHOT)
-    } */
+    set ooccoo(item: API.InventoryItem) {
+        this.emulator.rdramWrite8(this.instance + 18, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.ooccoo);
+    }
 
-    /* get asheiSketch(): boolean {
-        let val = this.getItem(API.InventorySlots.SKULL_HAMMER)
-        return !(val === API.InventoryItem.NONE);
+    get sketch_memo(): API.InventoryItem {
+        let item = this.emulator.rdramRead8(this.instance + 19)
+        if (item === API.InventoryItem.asheiSketch) return API.InventoryItem.asheiSketch;
+        else if (item === API.InventoryItem.auroMemo) return API.InventoryItem.auroMemo;
+        return API.InventoryItem.NONE;
     }
-    set asheiSketch(bool: boolean) {
-        let value = bool ? API.InventoryItem.asheiSketch : API.InventoryItem.NONE;
-        this.setItem(value, API.InventorySlots.SKULL_HAMMER)
-    } */
+    set sketch_memo(item: API.InventoryItem) {
+        this.emulator.rdramWrite8(this.instance + 19, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.sketch_memo);
+    }
 
     get fishingRod(): InventoryItem {
-        if (this.getItem(API.InventoryItem.fishingRodEaringWorm) as number !== 0xFF) return API.InventoryItem.fishingRodEaringWorm;
-        if (this.getItem(API.InventoryItem.fishingRodEaring) as number !== 0xFF) return API.InventoryItem.fishingRodEaring;
-        if (this.getItem(API.InventoryItem.fishingRod) as number !== 0xFF) return API.InventoryItem.fishingRod;
-        return 0xFF;
+        let item = this.emulator.rdramRead8(this.instance + 20)
+        if (item === API.InventoryItem.fishingRodEaringWorm) return API.InventoryItem.fishingRodEaringWorm;
+        else if (item === API.InventoryItem.fishingRodEaring) return API.InventoryItem.fishingRodEaring;
+        else if (item === API.InventoryItem.fishingRod) return API.InventoryItem.fishingRod;
+        return API.InventoryItem.NONE;
     }
-    set fishingRod(content: InventoryItem) {
-        if (content !== API.InventoryItem.fishingRod &&
-            content !== API.InventoryItem.fishingRodEaring &&
-            content !== API.InventoryItem.fishingRodEaringWorm
-        ) {
-            return;
-        }
-        this.setItem(content)
+    set fishingRod(item: InventoryItem) {
+        this.emulator.rdramWrite8(this.instance + 20, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.fishingRod);
     }
 
     get horseCall(): boolean {
-        let val = this.getItem(API.InventoryItem.horseCall)
-        return !(val === API.InventoryItem.NONE);
+        let val = this.getItem(API.InventorySlotItems.horseCall)
+        return !(val === API.InventorySlotItems.NONE);
     }
     set horseCall(bool: boolean) {
         let value = bool ? API.InventoryItem.horseCall : API.InventoryItem.NONE;
-        this.setItem(value)
+        this.emulator.rdramWrite8(this.instance + 21, value);
+        if (bool) this.addItemSlot(InventorySlotItems.horseCall);
+    }
+
+    get skyBook(): InventoryItem {
+        let item = this.emulator.rdramRead8(this.instance + 22)
+        if (item === API.InventoryItem.skyBookFilled) return API.InventoryItem.skyBookFilled;
+        else if (item === API.InventoryItem.skyBook) return API.InventoryItem.skyBook;
+        return API.InventoryItem.NONE;
+    }
+    set skyBook(item: InventoryItem) {
+        this.emulator.rdramWrite8(this.instance + 22, item);
+        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Unknown3); //TODO: test if this works
+    }
+
+    get slingshot(): boolean {
+        let val = this.getItem(API.InventorySlotItems.slingshot)
+        return !(val === API.InventorySlotItems.NONE);
+    }
+    set slingshot(bool: boolean) {
+        let value = bool ? API.InventoryItem.slingshot : API.InventoryItem.NONE;
+        this.emulator.rdramWrite8(this.instance + 23, value);
+        if (bool) this.addItemSlot(InventorySlotItems.slingshot);
     }
 
     // Counts
@@ -308,97 +351,4 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         this.emulator.rdramWrite8(0x804062AF, flag);
     }
 
-    getItem(item: API.InventoryItem): API.InventoryItem {
-        let curItem = API.InventoryItem.NONE;
-        for (let i = 0; i <= API.InventorySlots.SLOT_24; i++) {
-            let tempItem = this.emulator.rdramRead8(this.instance + i);
-            if (tempItem === item) {
-                curItem = tempItem;
-                return curItem;
-            }
-        }
-        return 0xFF;
-    }
-    getSlotForItem(item: API.InventoryItem): number {
-        //console.log(`item: ${item}`)
-        let slot = 0xFF;
-        let backup: number[] = [];
-        for (let i = 0; i <= API.InventorySlots.SLOT_24; i++) {
-            if (this.emulator.rdramRead8(this.instance + i) === 0xFF) {
-                backup.push(i);
-                //console.log(`backup: ${backup[i]}`)
-            }
-            if (this.emulator.rdramRead8(this.instance + i) === item) {
-                slot = i;
-                //console.log(`item found: ${item} at slot ${slot}`)
-            }
-            if (i === API.InventorySlots.SLOT_24 && slot === 0xFF) {
-                slot = backup[0]; //Set to empty slot if not detected
-                //console.log(`slot (backup) = ${slot}`)
-            }
-        }
-        //console.log(`return ${slot}`);
-        return slot;
-    }
-    setItem(item: API.InventoryItem): void {
-        let slot = this.getSlotForItem(item);
-        //console.log(`setItem slot: ${slot}`)
-        if (slot < 0 || slot > API.InventorySlots.SLOT_24) {
-            return;
-        }
-        this.emulator.rdramWrite8(this.instance + slot, item.valueOf());
-        this.emulator.rdramWrite8(this.slotInstance + slot, slot.valueOf());
-    }
-    /* getBottle(item: API.InventoryItem[]): API.InventoryItem[] {
-        console.log(`item: ${item}`)
-        let slot = 0xFF;
-        let myBottles: number[] = [];
-
-        for (let i = 0; i < item.length; i++) {
-            if (this.bottleID.includes(item[i])) {
-                myBottles.push(item[i]);
-            }
-        }
-
-        console.log(`getBottle return ${myBottles}`);
-        return myBottles;
-    }
-    setBottle(item: API.InventoryItem[]): void {
-        console.log(`setBottle`);
-        let slot = 0xFF;
-
-        for (let i = 0; i < API.InventorySlots.SLOT_24; i++) {
-            if (this.emulator.rdramRead8(this.instance + i) === 0xFF) {
-                slot = i;
-            }
-            for (let j = 0; j < item.length; j++) {
-                if (this.emulator.rdramRead8(this.instance + i) === 0xFF) {
-                    this.emulator.rdramWrite8(this.instance + i, item[j]);
-                    this.emulator.rdramWrite8(this.slotInstance + slot, slot);
-                }
-            }
-        }
-
-    }
-    getSlotForBottle(item: API.InventoryItem): number {
-        console.log(`item: ${item}`)
-        let slot = 0xFF;
-        let backup: number[] = [];
-        for (let i = 0; i <= API.InventorySlots.SLOT_24; i++) {
-            if (this.emulator.rdramRead8(this.instance + i) === 0xFF) {
-                backup.push(i);
-                //console.log(`backup: ${backup[i]}`)
-            }
-            if (this.emulator.rdramRead8(this.instance + i) === item[i]) {
-                slot = i;
-                console.log(`item found: ${item} at slot ${slot}`)
-            }
-            if (i === API.InventorySlots.SLOT_24 && slot === 0xFF) {
-                slot = backup[0]; //Set to empty slot if not detected
-                console.log(`slot (backup) = ${slot}`)
-            }
-        }
-        console.log(`getSlotForBottle return ${slot}`);
-        return slot;
-    } */
 }

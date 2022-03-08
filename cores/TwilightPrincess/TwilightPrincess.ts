@@ -29,12 +29,13 @@ export class TwilightPrincess implements ICore, API.ITPCore {
     last_known_room: number = -1;
     isLinkLoadingZone!: number;
     temp: boolean = false;
+    isFirstTunic = false;
 
     @Preinit(
     )
     preinit() {
         this.eventTicks.set('waitingForSaveload', () => {
-            if (!this.isSaveLoaded && this.helper.isSceneNameValid() && !this.helper.isTitleScreen()) {
+            if (!this.isSaveLoaded && this.helper.isSceneNameValid() && !this.helper.isTitleScreen() && this.helper.isLinkControllable()) {
                 this.isSaveLoaded = true;
                 bus.emit(API.TPEvents.ON_SAVE_LOADED, {});
             }
@@ -56,15 +57,13 @@ export class TwilightPrincess implements ICore, API.ITPCore {
             this.link,
             this.ModLoader.emulator
         );
-
         this.ModLoader.utils.setIntervalFrames(() => {
-            if (!this.helper.isTitleScreen() && this.helper.isLinkControllable() && !this.helper.isLoadingZone() && !this.helper.isSceneChange()) this.testInventory();
+            this.testInventory();
         }, 360);
     }
 
     @onTick()
     onTick() {
-
         if (this.helper.isTitleScreen() || !this.helper.isSceneNameValid()) return;
         if (this.helper.isLoadingZone() && !this.touching_loading_zone) {
             console.log(`OnLoadingZone()`);
@@ -93,9 +92,25 @@ export class TwilightPrincess implements ICore, API.ITPCore {
     }
 
     testInventory() {
-        //console.log(`slingshot = ${this.save.inventory.slingshot}`)
-        //console.log(`galeBoomerang = ${this.save.inventory.galeBoomerang}`)
-        this.save.inventory.galeBoomerang = true;
+        if (this.helper.isTitleScreen() || !this.helper.isSceneNameValid() || !this.helper.isLinkControllable()) return;
+        if (this.global.current_scene_frame > 300) return;
+
+        /* console.log(`galeBoomerang = ${this.save.inventory.galeBoomerang}`);
+        console.log(`lantern = ${this.save.inventory.lantern}`);
+        console.log(`galeBoomerang ${this.save.inventory.galeBoomerang}`);
+        console.log(`lantern ${this.save.inventory.lantern}`);
+        console.log(`spinner ${this.save.inventory.spinner}`);
+        console.log(`ironBoots ${this.save.inventory.ironBoots}`);
+        console.log(`bow ${this.save.inventory.bow}`);
+        console.log(`hawkeye ${this.save.inventory.hawkeye}`);
+        console.log(`ballAndChain ${this.save.inventory.ballAndChain}`);
+        console.log(`dominionRod ${this.save.inventory.dominionRod}`);
+        console.log(`clawshot ${this.save.inventory.clawshot}`);
+        console.log(`slingshot ${this.save.inventory.slingshot}`);
+        console.log(`fishingRod ${this.save.inventory.fishingRod}`);
+        console.log(`horseCall ${this.save.inventory.horseCall}`); */
+
+/*         this.save.inventory.galeBoomerang = true;
         this.save.inventory.lantern = true;
         this.save.inventory.spinner = true;
         this.save.inventory.ironBoots = true;
@@ -104,22 +119,16 @@ export class TwilightPrincess implements ICore, API.ITPCore {
         this.save.inventory.ballAndChain = true;
         this.save.inventory.dominionRod = true;
         this.save.inventory.clawshot = API.InventoryItem.doubleClawshot;
-        //this.save.inventory.//doubleClawshot = true;
         this.save.inventory.slingshot = true;
-        // let test: API.InventoryItem[] = [API.InventoryItem.bottle_empty, API.InventoryItem.bottle_empty, API.InventoryItem.bottle_empty, API.InventoryItem.bottle_empty];
-        // console.log(`test: ${test}`)
-        // this.save.inventory.bottles = test;
-        //this.save.inventory.bombBag1 = API.InventoryItem.bombNormal;
-        //this.save.inventory.bombBag2 = API.InventoryItem.bombWater;
-        //this.save.inventory.bombBag3 = API.InventoryItem.bombBug;
         this.save.inventory.fishingRod = API.InventoryItem.fishingRodEaring;
-        this.save.inventory.horseCall = true;
-        this.save.inventory.dekuSeeds = 30;
-        this.save.inventory.arrows = 30;
-        //this.save.inventory.bombs1 = 30;
-        //this.save.inventory.bombs2 = 30;
-        //this.save.inventory.bombs3 = 30;
+        this.save.inventory.horseCall = true; */
 
+        /* this.save.inventory.dekuSeeds = 30;
+        this.save.inventory.arrows = 30;
+
+        this.save.inventory.bombs1 = 30;
+        this.save.inventory.bombs2 = 30;
+        this.save.inventory.bombs3 = 30;
 
         this.save.swords.swordLevel = API.Sword.Master;
         this.save.shields.shieldLevel = API.Shield.Hylian;
@@ -130,6 +139,17 @@ export class TwilightPrincess implements ICore, API.ITPCore {
         this.save.questStatus.magicArmor = true;
         this.save.questStatus.zoraArmor = true;
         this.save.questStatus.heroArmor = true;
-        this.save.questStatus.goldenBugs = Buffer.from([0xFF, 0xFF, 0xFF])
+        this.save.questStatus.goldenBugs = Buffer.from([0xFF, 0xFF, 0xFF]) */
+    }
+
+    @EventHandler(API.TPEvents.ON_SCENE_CHANGE)
+    onSceneChange() {
+        if (this.isFirstTunic) return;
+        if (!this.isSaveLoaded || !this.helper.isSceneNameValid() || this.helper.isTitleScreen()) return;
+        if (this.save.questStatus.heroArmor) {
+            console.log("First hero tunic, changing...")
+            this.save.questStatus.clothing = 47;
+            this.isFirstTunic = true;
+        }
     }
 }

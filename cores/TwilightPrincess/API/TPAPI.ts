@@ -24,9 +24,8 @@ export interface IShields {
 }
 
 export interface IInventory extends IInventoryFields {
-    getItem(slotId: number): InventoryItem;
-    getSlotForItem(item: InventoryItem): number;
-    setItem(item: InventoryItem, slot: number): void;
+    getItem(item: InventorySlotItems): InventorySlotItems;
+    addItemSlot(item: number): void;
 }
 
 
@@ -43,6 +42,7 @@ export enum InventoryItem {
     doubleClawshot = 71,
     slingshot = 75,
     bottle_empty = 96,
+    bombEmpty = 80,
     bombNormal = 112,
     bombWater = 113,
     bombBug = 114,
@@ -106,24 +106,19 @@ export interface IInventoryFields {
     ballAndChain: boolean;
     dominionRod: boolean;
     clawshot: InventoryItem;
-    //doubleClawshot: InventoryItem;
     slingshot: boolean;
-    bottles: InventoryItem[];
+    bottle1: InventoryItem;
+    bottle2: InventoryItem;
+    bottle3: InventoryItem;
+    bottle4: InventoryItem;
     bombBag1: InventoryItem;
     bombBag2: InventoryItem;
     bombBag3: InventoryItem;
-    //ooccoo: boolean;
-    //asheiSketch: boolean;
+    ooccoo: InventoryItem;
+    sketch_memo: InventoryItem;
     fishingRod: InventoryItem;
     horseCall: boolean;
-    //skyBook: boolean;
-    //skyBook2: boolean;
-    dekuSeeds: number;
-    arrows: number;
-    bombs1: number;
-    bombs2: number;
-    bombs3: number;
-
+    skyBook: InventoryItem;
 }
 
 export const enum InventorySlots {
@@ -154,6 +149,34 @@ export const enum InventorySlots {
     SLOT_24
 }
 
+export const enum InventorySlotItems {
+    galeBoomerang = 0,
+    lantern = 1,
+    spinner = 2,
+    ironBoots = 3,
+    bow = 4,
+    hawkeye = 5,
+    ballAndChain = 6,
+    Unknown0 = 7,
+    dominionRod = 8,
+    Unknown1 = 9,
+    clawshot = 10,
+    Bottle1 = 11,
+    Bottle2 = 12,
+    Bottle3 = 13,
+    Bottle4 = 14,
+    Bombs1 = 15,
+    Bombs2 = 16,
+    Bombs3 = 17,
+    ooccoo = 18,
+    sketch_memo = 19,
+    fishingRod = 20,
+    horseCall = 21,
+    Unknown2 = 22,
+    slingshot = 23,
+    Unknown3 = 24,
+    NONE = 0xFF
+}
 export interface IQuestStatus {
     max_hp: number;
     current_hp: number;
@@ -170,6 +193,7 @@ export interface IQuestStatus {
     hiddenSkills: number;
     poeCount: number;
     scent: number;
+    wooden_sword: number;
 }
 
 export interface IGlobalContext {

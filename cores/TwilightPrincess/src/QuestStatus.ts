@@ -30,7 +30,16 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
     }
 
     jsonFields: string[] = [
-
+        "max_hp",
+        "currentWallet",
+        "heroArmor",
+        "zoraArmor",
+        "magicArmor",
+        "goldenBugs",
+        "hiddenSkills",
+        "poeCount",
+        "scent",
+        "wooden_sword"
     ];
 
     get max_hp(): number {
@@ -92,8 +101,7 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
     }
 
     get heroArmor(): boolean {
-        let bits = this.emulator.rdramReadBit8(0x80406292, 0);
-        return bits[0];
+        return this.emulator.rdramReadBit8(0x80406292, 0);
     }
     set heroArmor(flag: boolean) {
         this.emulator.rdramWriteBit8(0x80406292, 0, flag);
@@ -107,8 +115,7 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
     }
 
     get magicArmor(): boolean {
-        let bits = this.emulator.rdramReadBit8(0x80406291, 7);
-        return bits[7];
+        return this.emulator.rdramReadBit8(0x80406291, 7);
     }
     set magicArmor(flag: boolean) {
         this.emulator.rdramWriteBit8(0x80406291, 7, flag);
@@ -140,5 +147,12 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
     }
     set scent(flag: number) {
         this.emulator.rdramWrite8(0x804061D6, flag);
+    }
+
+    get wooden_sword(): number {
+        return this.emulator.rdramRead8(0x80406290);
+    }
+    set wooden_sword(flag: number) {
+        this.emulator.rdramWrite8(0x80406290, flag);
     }
 }
