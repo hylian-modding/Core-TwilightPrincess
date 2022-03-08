@@ -171,7 +171,7 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         let clawshot = this.emulator.rdramRead8(this.instance + 9)
         let dblClawshot = this.emulator.rdramRead8(this.instance + 10)
         if (dblClawshot === API.InventoryItem.doubleClawshot) return API.InventoryItem.doubleClawshot;
-        else if (clawshot === API.InventoryItem.doubleClawshot) return API.InventoryItem.clawshot;
+        else if (clawshot === API.InventoryItem.clawshot) return API.InventoryItem.clawshot;
         return API.InventoryItem.NONE;
     }
     set clawshot(item: API.InventoryItem) {

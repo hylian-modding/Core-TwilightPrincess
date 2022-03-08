@@ -39,7 +39,8 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
         "hiddenSkills",
         "poeCount",
         "scent",
-        "wooden_sword"
+        "wooden_sword",
+        "dominion_flag"
     ];
 
     get max_hp(): number {
@@ -154,5 +155,12 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
     }
     set wooden_sword(flag: number) {
         this.emulator.rdramWrite8(0x80406290, flag);
+    }
+
+    get dominion_flag(): number {
+        return this.emulator.rdramRead8(0x804069D5);
+    }
+    set dominion_flag(flag: number) {
+        this.emulator.rdramWrite8(0x804069D5, flag);
     }
 }

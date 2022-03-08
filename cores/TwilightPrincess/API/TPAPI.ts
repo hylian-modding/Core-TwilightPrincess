@@ -194,6 +194,7 @@ export interface IQuestStatus {
     poeCount: number;
     scent: number;
     wooden_sword: number;
+    dominion_flag: number;
 }
 
 export interface IGlobalContext {
