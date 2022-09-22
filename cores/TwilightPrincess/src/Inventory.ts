@@ -86,7 +86,7 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         this.itemSlots = slots;
     }
 
-    //Inventory Slots
+    //Inventory Items
     get galeBoomerang(): boolean {
         let val = this.getItem(API.InventorySlotItems.galeBoomerang)
         return !(val === API.InventorySlotItems.NONE);
@@ -104,7 +104,10 @@ export class Inventory extends JSONTemplate implements API.IInventory {
     set lantern(bool: boolean) {
         let value = bool ? API.InventoryItem.lantern : API.InventoryItem.NONE;
         this.emulator.rdramWrite8(this.instance + 1, value);
-        if (bool) this.addItemSlot(InventorySlotItems.lantern);
+        if (bool) {
+            this.addItemSlot(InventorySlotItems.lantern);
+            this.emulator.rdramWrite16(0x804061C6, 0x5460);
+        }
     }
 
     get spinner(): boolean {
@@ -313,6 +316,27 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         let value = bool ? API.InventoryItem.slingshot : API.InventoryItem.NONE;
         this.emulator.rdramWrite8(this.instance + 23, value);
         if (bool) this.addItemSlot(InventorySlotItems.slingshot);
+    }
+
+    get quiver(): number {
+        return this.emulator.rdramRead8(0x804062B8);
+    }
+    set quiver(flag: number) {
+        this.emulator.rdramWrite8(0x804062B8, flag);
+    }
+
+    get fusedShadow(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804062C9, 0x1);
+    }
+    set fusedShadow(buf: Buffer){
+        this.emulator.rdramWriteBuffer(0x804062C9, buf);
+    }
+
+    get mirrorShard(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804062CA, 0x1);
+    }
+    set mirrorShard(buf: Buffer){
+        this.emulator.rdramWriteBuffer(0x804062CA, buf);
     }
 
     // Counts

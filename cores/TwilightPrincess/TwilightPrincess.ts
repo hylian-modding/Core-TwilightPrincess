@@ -30,6 +30,7 @@ export class TwilightPrincess implements ICore, API.ITPCore {
     isLinkLoadingZone!: number;
     temp: boolean = false;
     isFirstTunic = false;
+    spdHack = false;
 
     @Preinit(
     )
@@ -57,9 +58,9 @@ export class TwilightPrincess implements ICore, API.ITPCore {
             this.link,
             this.ModLoader.emulator
         );
-        this.ModLoader.utils.setIntervalFrames(() => {
-            this.testInventory();
-        }, 360);
+        this.ModLoader.utils.setIntervalFrames(()=>{
+            
+        }, 600);
     }
 
     @onTick()
@@ -91,6 +92,21 @@ export class TwilightPrincess implements ICore, API.ITPCore {
 
     }
 
+    speedhack() {
+        //console.log(`speedhack`)
+        this.ModLoader.emulator.rdramWrite32(0x8003D50C, 0x60000000);
+        this.ModLoader.emulator.rdramWrite32(0x8003D528, 0x60000000);
+        this.ModLoader.emulator.rdramWrite32(0x8003D540, 0x60000000);
+        this.ModLoader.emulator.rdramWrite32(0x8003D55C, 0x60000000);
+        this.ModLoader.emulator.rdramWrite32(0x8003D5B8, 0x60000000);
+        this.ModLoader.emulator.rdramWrite32(0x8003D5D4, 0x60000000);
+        this.ModLoader.emulator.rdramWrite32(0x8003D5EC, 0x60000000);
+        this.ModLoader.emulator.rdramWrite32(0x8003D608, 0x60000000);
+
+        this.ModLoader.emulator.invalidateCachedCode(0x8003D50C, 0xFC, true);
+    }
+
+
     testInventory() {
         if (this.helper.isTitleScreen() || !this.helper.isSceneNameValid() || !this.helper.isLinkControllable()) return;
         if (this.global.current_scene_frame > 300) return;
@@ -110,18 +126,18 @@ export class TwilightPrincess implements ICore, API.ITPCore {
         console.log(`fishingRod ${this.save.inventory.fishingRod}`);
         console.log(`horseCall ${this.save.inventory.horseCall}`); */
 
-/*         this.save.inventory.galeBoomerang = true;
-        this.save.inventory.lantern = true;
-        this.save.inventory.spinner = true;
-        this.save.inventory.ironBoots = true;
-        this.save.inventory.bow = true;
-        this.save.inventory.hawkeye = true;
-        this.save.inventory.ballAndChain = true;
-        this.save.inventory.dominionRod = true;
-        this.save.inventory.clawshot = API.InventoryItem.doubleClawshot;
-        this.save.inventory.slingshot = true;
-        this.save.inventory.fishingRod = API.InventoryItem.fishingRodEaring;
-        this.save.inventory.horseCall = true; */
+        /*         this.save.inventory.galeBoomerang = true;
+                this.save.inventory.lantern = true;
+                this.save.inventory.spinner = true;
+                this.save.inventory.ironBoots = true;
+                this.save.inventory.bow = true;
+                this.save.inventory.hawkeye = true;
+                this.save.inventory.ballAndChain = true;
+                this.save.inventory.dominionRod = true;
+                this.save.inventory.clawshot = API.InventoryItem.doubleClawshot;
+                this.save.inventory.slingshot = true;
+                this.save.inventory.fishingRod = API.InventoryItem.fishingRodEaring;
+                this.save.inventory.horseCall = true; */
 
         /* this.save.inventory.dekuSeeds = 30;
         this.save.inventory.arrows = 30;
@@ -144,7 +160,7 @@ export class TwilightPrincess implements ICore, API.ITPCore {
 
     @EventHandler(API.TPEvents.ON_SCENE_CHANGE)
     onSceneChange() {
-        if (this.isFirstTunic) return;
+        this.speedhack();
         if (!this.isSaveLoaded || !this.helper.isSceneNameValid() || this.helper.isTitleScreen()) return;
         if (this.save.questStatus.heroArmor) {
             console.log("First hero tunic, changing...")
