@@ -198,6 +198,7 @@ export interface IQuestStatus {
 }
 
 export interface IGlobalContext {
+    current_stage_id: number;
     current_scene_frame: number;
     current_scene_name: string;
     current_room_number: number;
