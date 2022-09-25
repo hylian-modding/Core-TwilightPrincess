@@ -113,6 +113,7 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         this.emulator.rdramWrite8(this.instance + 1, value);
         if (bool) {
             this.addItemSlot(InventorySlotItems.lantern);
+            //Lamp Oil
             this.emulator.rdramWrite16(0x804061C6, 0x5460);
         }
     }
@@ -239,6 +240,7 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 15, item);
             this.addItemSlot(InventorySlotItems.Bombs1);
+            this.bombs1 = 30;
         }
     }
 
@@ -251,6 +253,7 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 16, item);
             this.addItemSlot(InventorySlotItems.Bombs2);
+            this.bombs2 = 30;
         }
     }
 
@@ -263,6 +266,7 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 17, item);
             this.addItemSlot(InventorySlotItems.Bombs3);
+            this.bombs3 = 30;
         }
     }
 
@@ -328,7 +332,10 @@ export class Inventory extends JSONTemplate implements API.IInventory {
     set slingshot(bool: boolean) {
         let value = bool ? API.InventoryItem.slingshot : API.InventoryItem.NONE;
         this.emulator.rdramWrite8(this.instance + 23, value);
-        if (bool) this.addItemSlot(InventorySlotItems.slingshot);
+        if (bool) {
+            this.addItemSlot(InventorySlotItems.slingshot);
+            this.dekuSeeds = 50;
+        }
     }
 
     get quiver(): number {
@@ -336,6 +343,7 @@ export class Inventory extends JSONTemplate implements API.IInventory {
     }
     set quiver(flag: number) {
         this.emulator.rdramWrite8(0x804062B8, flag);
+        this.arrows = 30;
     }
 
     get fusedShadow(): Buffer {
