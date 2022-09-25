@@ -23,6 +23,13 @@ export class Inventory extends JSONTemplate implements API.IInventory {
             API.InventoryItem.PurpleChuJelly, API.InventoryItem.SimpleSoup, API.InventoryItem.GoodSoup, API.InventoryItem.SuperbSoup,
         ]
 
+    private bombID =
+        [
+            API.InventoryItem.bombNormal,
+            API.InventoryItem.bombWater,
+            API.InventoryItem.bombBug,
+            API.InventoryItem.bombEmpty
+        ]
     constructor(emu: IMemory) {
         super();
         this.emulator = emu;
@@ -225,32 +232,38 @@ export class Inventory extends JSONTemplate implements API.IInventory {
 
     get bombBag1(): API.InventoryItem {
         let bomb = this.emulator.rdramRead8(this.instance + 15)
-        if (this.bottleID.includes(bomb)) return bomb;
+        if (this.bombID.includes(bomb)) return bomb;
         return API.InventoryItem.NONE;
     }
     set bombBag1(item: API.InventoryItem) {
-        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) this.emulator.rdramWrite8(this.instance + 14, item);
-        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bombs1);
+        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
+            this.emulator.rdramWrite8(this.instance + 15, item);
+            this.addItemSlot(InventorySlotItems.Bombs1);
+        }
     }
 
     get bombBag2(): API.InventoryItem {
         let bomb = this.emulator.rdramRead8(this.instance + 16)
-        if (this.bottleID.includes(bomb)) return bomb;
+        if (this.bombID.includes(bomb)) return bomb;
         return API.InventoryItem.NONE;
     }
     set bombBag2(item: API.InventoryItem) {
-        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) this.emulator.rdramWrite8(this.instance + 14, item);
-        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bombs1);
+        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
+            this.emulator.rdramWrite8(this.instance + 16, item);
+            this.addItemSlot(InventorySlotItems.Bombs2);
+        }
     }
 
     get bombBag3(): API.InventoryItem {
         let bomb = this.emulator.rdramRead8(this.instance + 17)
-        if (this.bottleID.includes(bomb)) return bomb;
+        if (this.bombID.includes(bomb)) return bomb;
         return API.InventoryItem.NONE;
     }
     set bombBag3(item: API.InventoryItem) {
-        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) this.emulator.rdramWrite8(this.instance + 14, item);
-        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.Bombs1);
+        if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
+            this.emulator.rdramWrite8(this.instance + 17, item);
+            this.addItemSlot(InventorySlotItems.Bombs3);
+        }
     }
 
     get ooccoo(): API.InventoryItem {
@@ -328,14 +341,14 @@ export class Inventory extends JSONTemplate implements API.IInventory {
     get fusedShadow(): Buffer {
         return this.emulator.rdramReadBuffer(0x804062C9, 0x1);
     }
-    set fusedShadow(buf: Buffer){
+    set fusedShadow(buf: Buffer) {
         this.emulator.rdramWriteBuffer(0x804062C9, buf);
     }
 
     get mirrorShard(): Buffer {
         return this.emulator.rdramReadBuffer(0x804062CA, 0x1);
     }
-    set mirrorShard(buf: Buffer){
+    set mirrorShard(buf: Buffer) {
         this.emulator.rdramWriteBuffer(0x804062CA, buf);
     }
 
