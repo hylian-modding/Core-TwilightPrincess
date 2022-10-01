@@ -346,20 +346,6 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         this.arrows = 30;
     }
 
-    get fusedShadow(): Buffer {
-        return this.emulator.rdramReadBuffer(0x804062C9, 0x1);
-    }
-    set fusedShadow(buf: Buffer) {
-        this.emulator.rdramWriteBuffer(0x804062C9, buf);
-    }
-
-    get mirrorShard(): Buffer {
-        return this.emulator.rdramReadBuffer(0x804062CA, 0x1);
-    }
-    set mirrorShard(buf: Buffer) {
-        this.emulator.rdramWriteBuffer(0x804062CA, buf);
-    }
-
     // Counts
     get dekuSeeds(): number {
         return this.emulator.rdramRead8(0x804062B4);

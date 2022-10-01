@@ -119,6 +119,12 @@ export interface IInventoryFields {
     fishingRod: InventoryItem;
     horseCall: boolean;
     skyBook: InventoryItem;
+    quiver: number;
+    dekuSeeds: number;
+    arrows: number;
+    bombs1: number;
+    bombs2: number;
+    bombs3: number;
 }
 
 export const enum InventorySlots {
@@ -195,6 +201,8 @@ export interface IQuestStatus {
     scent: number;
     wooden_sword: number;
     dominion_flag: number;
+    fusedShadow: Buffer;
+    mirrorShard: Buffer;
 }
 
 export interface IGlobalContext {

@@ -40,7 +40,9 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
         "poeCount",
         "scent",
         "wooden_sword",
-        "dominion_flag"
+        "dominion_flag",
+        "fusedShadow",
+        "mirrorShard"
     ];
 
     get max_hp(): number {
@@ -162,5 +164,19 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
     }
     set dominion_flag(flag: number) {
         this.emulator.rdramWrite8(0x804069D5, flag);
+    }
+
+    get fusedShadow(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804062C9, 0x1);
+    }
+    set fusedShadow(buf: Buffer) {
+        this.emulator.rdramWriteBuffer(0x804062C9, buf);
+    }
+
+    get mirrorShard(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804062CA, 0x1);
+    }
+    set mirrorShard(buf: Buffer) {
+        this.emulator.rdramWriteBuffer(0x804062CA, buf);
     }
 }
