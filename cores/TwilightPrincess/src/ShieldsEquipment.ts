@@ -36,6 +36,9 @@ export class ShieldsEquipment extends JSONTemplate implements IShields {
   set shieldLevel(level: Shield) {
     let bits = this.emulator.rdramReadBits8(0x80406292);
     switch (level) {
+      case Shield.Hylian:
+        bits[ShieldBitMap.Hylian] = 1;
+        break;
       case Shield.Ordon:
         bits[ShieldBitMap.Ordon] = 1;
         bits[ShieldBitMap.Wooden] = 0;
@@ -43,9 +46,6 @@ export class ShieldsEquipment extends JSONTemplate implements IShields {
       case Shield.Wooden:
         bits[ShieldBitMap.Ordon] = 0;
         bits[ShieldBitMap.Wooden] = 1;
-        break;
-      case Shield.Hylian:
-        bits[ShieldBitMap.Hylian] = 1;
         break;
     }
     this.emulator.rdramWriteBits8(0x80406292, bits);
