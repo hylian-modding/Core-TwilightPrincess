@@ -6,10 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "updateUrl": "https://repo.modloader64.com/mods/TPO/core/update/update.json",
+  "devUrl": "https://repo.modloader64.com/mods/TPO/dev/core/update.json",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "updateUrl": "",
   "date": "Tue, 18 Oct 2022 06:03:53 GMT",
   "commit": "7b856ba"
 }
