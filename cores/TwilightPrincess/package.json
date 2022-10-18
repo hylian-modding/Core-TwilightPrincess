@@ -1,13 +1,15 @@
 {
-    "name": "TwilightPrincess",
-    "version": "1.0.0",
-    "description": "",
-    "main": "TwilightPrincess.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "updateUrl": ""
+  "name": "TwilightPrincess",
+  "version": "1.0.0-nightly@7b856ba",
+  "description": "",
+  "main": "TwilightPrincess.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "updateUrl": "",
+  "date": "Tue, 18 Oct 2022 06:03:53 GMT",
+  "commit": "7b856ba"
 }

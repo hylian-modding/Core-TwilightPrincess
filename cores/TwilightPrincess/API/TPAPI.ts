@@ -23,11 +23,16 @@ export interface IShields {
     shieldLevel: Shield;
 }
 
+export const enum Wallet {
+    NONE = 0,
+    Small = 1,
+    Big = 2,
+    Giant = 3,
+}
 export interface IInventory extends IInventoryFields {
     getItem(item: InventorySlotItems): InventorySlotItems;
     addItemSlot(item: number): void;
 }
-
 
 export enum InventoryItem {
     galeBoomerang = 64,
@@ -125,6 +130,7 @@ export interface IInventoryFields {
     bombs1: number;
     bombs2: number;
     bombs3: number;
+    bombCapacity: boolean;
 }
 
 export const enum InventorySlots {
@@ -192,6 +198,11 @@ export interface IQuestStatus {
     form: number;
     rupees: number;
     currentWallet: number;
+    ordonSword: boolean;
+    masterSword: boolean;
+    ordonShield: boolean;
+    woodenShield: boolean;
+    hylianShield: boolean;
     heroArmor: boolean;
     zoraArmor: boolean;
     magicArmor: boolean;
@@ -201,8 +212,13 @@ export interface IQuestStatus {
     scent: number;
     wooden_sword: number;
     dominion_flag: number;
-    fusedShadow: Buffer;
-    mirrorShard: Buffer;
+    fusedShadow1: boolean;
+    fusedShadow2: boolean;
+    fusedShadow3: boolean;
+    mirrorShard1: boolean;
+    mirrorShard2: boolean;
+    mirrorShard3: boolean;
+    mirrorShard4: boolean;
 }
 
 export interface IGlobalContext {
@@ -214,13 +230,14 @@ export interface IGlobalContext {
     next_scene_name: string;
     next_room_number: number;
     linkPointer: number;
+    time: number;
 }
 
 export interface ISaveContext {
     inventory: IInventory;
     questStatus: IQuestStatus;
-    shields: IShields;
-    swords: ISwords;
+    //shields: IShields;
+    //swords: ISwords;
     eventFlags: Buffer;
     regionFlags: Buffer;
     liveFlags: Buffer;

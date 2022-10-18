@@ -32,6 +32,11 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
     jsonFields: string[] = [
         "max_hp",
         "currentWallet",
+        "ordonSword",
+        "masterSword",
+        "ordonShield",
+        "woodenShield",
+        "hylianShield",
         "heroArmor",
         "zoraArmor",
         "magicArmor",
@@ -41,8 +46,13 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
         "scent",
         "wooden_sword",
         "dominion_flag",
-        "fusedShadow",
-        "mirrorShard"
+        "fusedShadow1",
+        "fusedShadow2",
+        "fusedShadow3",
+        "mirrorShard1",
+        "mirrorShard2",
+        "mirrorShard3",
+        "mirrorShard4",
     ];
 
     get max_hp(): number {
@@ -101,6 +111,41 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
     }
     set currentWallet(flag: number) {
         this.emulator.rdramWrite8(0x804061D9, flag);
+    }
+
+    get ordonSword(): boolean {
+        return this.emulator.rdramReadBit8(0x80406292, 7);
+    }
+    set ordonSword(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x80406292, 7, flag);
+    }
+
+    get masterSword(): boolean {
+        return this.emulator.rdramReadBit8(0x80406292, 6);
+    }
+    set masterSword(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x80406292, 6, flag);
+    }
+
+    get ordonShield(): boolean {
+        return this.emulator.rdramReadBit8(0x80406292, 5);
+    }
+    set ordonShield(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x80406292, 5, flag);
+    }
+
+    get woodenShield(): boolean {
+        return this.emulator.rdramReadBit8(0x80406292, 4);
+    }
+    set woodenShield(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x80406292, 4, flag);
+    }
+
+    get hylianShield(): boolean {
+        return this.emulator.rdramReadBit8(0x80406292, 3);
+    }
+    set hylianShield(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x80406292, 3, flag);
     }
 
     get heroArmor(): boolean {
@@ -166,17 +211,47 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
         this.emulator.rdramWrite8(0x804069D5, flag);
     }
 
-    get fusedShadow(): Buffer {
-        return this.emulator.rdramReadBuffer(0x804062C9, 0x1);
+    get fusedShadow1(): boolean {
+        return this.emulator.rdramReadBit8(0x804062C9, 7);
     }
-    set fusedShadow(buf: Buffer) {
-        this.emulator.rdramWriteBuffer(0x804062C9, buf);
+    set fusedShadow1(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x804062C9, 7, flag);
+    }
+    get fusedShadow2(): boolean {
+        return this.emulator.rdramReadBit8(0x804062C9, 6);
+    }
+    set fusedShadow2(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x804062C9, 6, flag);
+    }
+    get fusedShadow3(): boolean {
+        return this.emulator.rdramReadBit8(0x804062C9, 5);
+    }
+    set fusedShadow3(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x804062C9, 5, flag);
     }
 
-    get mirrorShard(): Buffer {
-        return this.emulator.rdramReadBuffer(0x804062CA, 0x1);
+    get mirrorShard1(): boolean {
+        return this.emulator.rdramReadBit8(0x804062CA, 7);
     }
-    set mirrorShard(buf: Buffer) {
-        this.emulator.rdramWriteBuffer(0x804062CA, buf);
+    set mirrorShard1(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x804062CA, 7, flag);
+    }
+    get mirrorShard2(): boolean {
+        return this.emulator.rdramReadBit8(0x804062CA, 6);
+    }
+    set mirrorShard2(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x804062CA, 6, flag);
+    }
+    get mirrorShard3(): boolean {
+        return this.emulator.rdramReadBit8(0x804062CA, 5);
+    }
+    set mirrorShard3(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x804062CA, 5, flag);
+    }
+    get mirrorShard4(): boolean {
+        return this.emulator.rdramReadBit8(0x804062CA, 4);
+    }
+    set mirrorShard4(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x804062CA, 4, flag);
     }
 }

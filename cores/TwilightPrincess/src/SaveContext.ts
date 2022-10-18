@@ -19,14 +19,14 @@ export class SaveContext extends JSONTemplate implements API.ISaveContext {
     private liveFlagAddr = this.dSv_info_c + 0x958; //0x80406B18; 
     inventory: Inventory;
     questStatus: QuestStatus;
-    swords: SwordsEquipment;
-    shields: ShieldsEquipment;
+    //swords: SwordsEquipment;
+    //shields: ShieldsEquipment;
 
     jsonFields: string[] = [
         "inventory",
         'questStatus',
-        "swords",
-        "shields",
+        //"swords",
+        //"shields",
         "eventFlags",
         "regionFlags",
         "liveFlags",
@@ -38,8 +38,8 @@ export class SaveContext extends JSONTemplate implements API.ISaveContext {
         this.core = core;
         this.inventory = new CORE.Inventory(emu);
         this.questStatus = new CORE.QuestStatus(emu, core);
-        this.swords = new SwordsEquipment(emu, core);
-        this.shields = new ShieldsEquipment(emu, core);
+        //this.swords = new SwordsEquipment(emu, core);
+        //this.shields = new ShieldsEquipment(emu, core);
     }
 
     get eventFlags(): Buffer {

@@ -51,6 +51,13 @@ export class GlobalContext extends JSONTemplate implements API.IGlobalContext {
         return this.emulator.rdramRead32(0x803DCE54);
     }
 
+    get time(): number {
+        return this.emulator.rdramReadF32(0x804061F4);
+    }
+    set time(flag: number) {
+        this.emulator.rdramWriteF32(0x804061F4, flag);
+    }
+    
     sceneNames = [
         "D_MN01",
         "D_MN01A",

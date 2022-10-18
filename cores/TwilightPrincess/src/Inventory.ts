@@ -59,7 +59,9 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         'horseCall',
         'skyBook',
         'sketch_memo',
-        'ooccoo'
+        'ooccoo',
+        'bombCapacity',
+        'quiver',
     ];
 
 
@@ -146,6 +148,7 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         let value = bool ? API.InventoryItem.bow : API.InventoryItem.NONE;
         this.emulator.rdramWrite8(this.instance + 4, value);
         if (bool) this.addItemSlot(InventorySlotItems.bow);
+        if (this.arrows === 0) this.arrows = this.quiver;
     }
 
     get hawkeye(): boolean {
@@ -240,7 +243,21 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 15, item);
             this.addItemSlot(InventorySlotItems.Bombs1);
-            this.bombs1 = 30;
+            if (this.bombs1 === 0) return;
+            switch (item) {
+                case InventoryItem.bombNormal:
+                    if (!this.bombCapacity) this.bombs1 = 30;
+                    else this.bombs1 = 60;
+                    break;
+                case InventoryItem.bombWater:
+                    if (!this.bombCapacity) this.bombs1 = 15;
+                    else this.bombs1 = 30;
+                    break;
+                case InventoryItem.bombBug:
+                    if (!this.bombCapacity) this.bombs1 = 10;
+                    else this.bombs1 = 20;
+                    break;
+            }
         }
     }
 
@@ -253,7 +270,21 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 16, item);
             this.addItemSlot(InventorySlotItems.Bombs2);
-            this.bombs2 = 30;
+            if (this.bombs2 === 0) return;
+            switch (item) {
+                case InventoryItem.bombNormal:
+                    if (!this.bombCapacity) this.bombs2 = 30;
+                    else this.bombs2 = 60;
+                    break;
+                case InventoryItem.bombWater:
+                    if (!this.bombCapacity) this.bombs2 = 15;
+                    else this.bombs2 = 30;
+                    break;
+                case InventoryItem.bombBug:
+                    if (!this.bombCapacity) this.bombs2 = 10;
+                    else this.bombs2 = 20;
+                    break;
+            }
         }
     }
 
@@ -266,7 +297,21 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 17, item);
             this.addItemSlot(InventorySlotItems.Bombs3);
-            this.bombs3 = 30;
+            if (this.bombs3 === 0) return;
+            switch (item) {
+                case InventoryItem.bombNormal:
+                    if (!this.bombCapacity) this.bombs3 = 30;
+                    else this.bombs3 = 60;
+                    break;
+                case InventoryItem.bombWater:
+                    if (!this.bombCapacity) this.bombs3 = 15;
+                    else this.bombs3 = 30;
+                    break;
+                case InventoryItem.bombBug:
+                    if (!this.bombCapacity) this.bombs3 = 10;
+                    else this.bombs3 = 20;
+                    break;
+            }
         }
     }
 
@@ -343,7 +388,13 @@ export class Inventory extends JSONTemplate implements API.IInventory {
     }
     set quiver(flag: number) {
         this.emulator.rdramWrite8(0x804062B8, flag);
-        this.arrows = 30;
+    }
+
+    get bombCapacity(): boolean {
+        return this.emulator.rdramReadBit8(0x80406296, 7);
+    }
+    set bombCapacity(flag: boolean) {
+        this.emulator.rdramWriteBit8(0x80406296, 7, flag);
     }
 
     // Counts
