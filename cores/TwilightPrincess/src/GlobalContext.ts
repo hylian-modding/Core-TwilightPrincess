@@ -58,6 +58,16 @@ export class GlobalContext extends JSONTemplate implements API.IGlobalContext {
         this.emulator.rdramWriteF32(0x804061F4, flag);
     }
     
+    getSaveDataForCurrentScene(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804063B0 + (this.current_stage_id * 0x20), 0x20);
+    }
+
+    writeSaveDataForCurrentScene(buf: Buffer): void {
+        if (buf.byteLength === 0x20) {
+            this.emulator.rdramWriteBuffer(0x804063B0 + (this.current_stage_id * 0x20), buf);
+        }
+    }
+
     sceneNames = [
         "D_MN01",
         "D_MN01A",

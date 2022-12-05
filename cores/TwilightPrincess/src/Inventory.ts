@@ -181,17 +181,29 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (bool) this.addItemSlot(InventorySlotItems.dominionRod);
     }
 
+
     get clawshot(): API.InventoryItem {
         let clawshot = this.emulator.rdramRead8(this.instance + 9)
         let dblClawshot = this.emulator.rdramRead8(this.instance + 10)
-        if (dblClawshot === API.InventoryItem.doubleClawshot) return API.InventoryItem.doubleClawshot;
-        else if (clawshot === API.InventoryItem.clawshot) return API.InventoryItem.clawshot;
+        if (clawshot === API.InventoryItem.clawshot && dblClawshot !== API.InventoryItem.doubleClawshot) return API.InventoryItem.clawshot;
+        else if (dblClawshot === API.InventoryItem.doubleClawshot) return API.InventoryItem.doubleClawshot;
         return API.InventoryItem.NONE;
     }
     set clawshot(item: API.InventoryItem) {
-        if (item === API.InventoryItem.doubleClawshot) this.emulator.rdramWrite8(this.instance + 10, item);
-        else if (item === API.InventoryItem.clawshot) this.emulator.rdramWrite8(this.instance + 9, item);
-        if (item !== API.InventoryItem.NONE) this.addItemSlot(InventorySlotItems.clawshot);
+        if (item === API.InventoryItem.clawshot) {
+            this.emulator.rdramWrite8(this.instance + 9, API.InventoryItem.clawshot);
+            this.emulator.rdramWrite8(this.instance + 10, API.InventoryItem.NONE);
+            this.addItemSlot(InventorySlotItems.clawshot)
+        }
+        if (item === API.InventoryItem.doubleClawshot) { 
+            this.emulator.rdramWrite8(this.instance + 9, API.InventoryItem.NONE);
+            this.emulator.rdramWrite8(this.instance + 10, API.InventoryItem.doubleClawshot);
+            this.addItemSlot(InventorySlotItems.dblClawshot);
+        }
+        if (item === API.InventoryItem.NONE) {
+            this.emulator.rdramWrite8(this.instance + 9, API.InventoryItem.NONE);
+            this.emulator.rdramWrite8(this.instance + 10, API.InventoryItem.NONE);
+        }
     }
 
     get bottle1(): API.InventoryItem {
@@ -243,21 +255,6 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 15, item);
             this.addItemSlot(InventorySlotItems.Bombs1);
-            if (this.bombs1 === 0) return;
-            switch (item) {
-                case InventoryItem.bombNormal:
-                    if (!this.bombCapacity) this.bombs1 = 30;
-                    else this.bombs1 = 60;
-                    break;
-                case InventoryItem.bombWater:
-                    if (!this.bombCapacity) this.bombs1 = 15;
-                    else this.bombs1 = 30;
-                    break;
-                case InventoryItem.bombBug:
-                    if (!this.bombCapacity) this.bombs1 = 10;
-                    else this.bombs1 = 20;
-                    break;
-            }
         }
     }
 
@@ -270,21 +267,6 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 16, item);
             this.addItemSlot(InventorySlotItems.Bombs2);
-            if (this.bombs2 === 0) return;
-            switch (item) {
-                case InventoryItem.bombNormal:
-                    if (!this.bombCapacity) this.bombs2 = 30;
-                    else this.bombs2 = 60;
-                    break;
-                case InventoryItem.bombWater:
-                    if (!this.bombCapacity) this.bombs2 = 15;
-                    else this.bombs2 = 30;
-                    break;
-                case InventoryItem.bombBug:
-                    if (!this.bombCapacity) this.bombs2 = 10;
-                    else this.bombs2 = 20;
-                    break;
-            }
         }
     }
 
@@ -297,21 +279,6 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (item === API.InventoryItem.bombNormal || API.InventoryItem.bombWater || API.InventoryItem.bombBug || API.InventoryItem.bombEmpty) {
             this.emulator.rdramWrite8(this.instance + 17, item);
             this.addItemSlot(InventorySlotItems.Bombs3);
-            if (this.bombs3 === 0) return;
-            switch (item) {
-                case InventoryItem.bombNormal:
-                    if (!this.bombCapacity) this.bombs3 = 30;
-                    else this.bombs3 = 60;
-                    break;
-                case InventoryItem.bombWater:
-                    if (!this.bombCapacity) this.bombs3 = 15;
-                    else this.bombs3 = 30;
-                    break;
-                case InventoryItem.bombBug:
-                    if (!this.bombCapacity) this.bombs3 = 10;
-                    else this.bombs3 = 20;
-                    break;
-            }
         }
     }
 

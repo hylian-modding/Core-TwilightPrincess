@@ -1,6 +1,6 @@
 {
   "name": "TwilightPrincess",
-  "version": "1.0.0-nightly@7b856ba",
+  "version": "1.0.0-nightly@f29f828",
   "description": "",
   "main": "TwilightPrincess.js",
   "scripts": {
@@ -11,6 +11,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "date": "Tue, 18 Oct 2022 06:03:53 GMT",
-  "commit": "7b856ba"
+  "date": "Mon, 05 Dec 2022 00:12:03 GMT",
+  "commit": "f29f828"
 }

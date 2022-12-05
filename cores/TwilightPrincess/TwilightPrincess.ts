@@ -30,7 +30,6 @@ export class TwilightPrincess implements ICore, API.ITPCore {
     isLinkLoadingZone!: number;
     temp: boolean = false;
     isFirstTunic = false;
-    spdHack = false;
 
     @Preinit(
     )
@@ -58,23 +57,25 @@ export class TwilightPrincess implements ICore, API.ITPCore {
             this.link,
             this.ModLoader.emulator
         );
-        this.ModLoader.utils.setIntervalFrames(()=>{
-            
+        this.ModLoader.utils.setIntervalFrames(() => {
+
         }, 600);
     }
 
     @onTick()
     onTick() {
+        this.speedhack();
         if (this.helper.isTitleScreen() || !this.helper.isSceneNameValid()) return;
         if (this.helper.isLoadingZone() && !this.touching_loading_zone) {
             console.log(`OnLoadingZone()`);
             bus.emit(API.TPEvents.ON_LOADING_ZONE, {});
             this.touching_loading_zone = true;
         }
-        if (this.touching_loading_zone && this.helper.isSceneChange() && !this.temp) {
-            console.log(`OnSceneChange(): Scene ${this.global.next_scene_name}`);
-            bus.emit(API.TPEvents.ON_SCENE_CHANGE, this.global.next_scene_name);
+        if (this.touching_loading_zone && this.global.current_scene_name !== this.last_known_scene && !this.temp && this.global.current_scene_frame > 1) {
+            console.log(`OnSceneChange(): Scene ${this.global.current_scene_name}`);
+            bus.emit(API.TPEvents.ON_SCENE_CHANGE, this.global.current_scene_name);
             this.touching_loading_zone = false;
+            this.last_known_scene = this.global.current_scene_name;
             this.temp = true;
         }
         if (this.global.current_scene_frame === 60) this.temp = false;
@@ -103,7 +104,7 @@ export class TwilightPrincess implements ICore, API.ITPCore {
         this.ModLoader.emulator.rdramWrite32(0x8003D5EC, 0x60000000);
         this.ModLoader.emulator.rdramWrite32(0x8003D608, 0x60000000);
 
-        this.ModLoader.emulator.invalidateCachedCode(0x8003D50C, 0xFC, true);
+        //this.ModLoader.emulator.invalidateCachedCode(0x8003D50C, 0x100, true);
     }
 
 
@@ -160,10 +161,9 @@ export class TwilightPrincess implements ICore, API.ITPCore {
 
     @EventHandler(API.TPEvents.ON_SCENE_CHANGE)
     onSceneChange() {
-        this.speedhack();
         if (!this.isSaveLoaded || !this.helper.isSceneNameValid() || this.helper.isTitleScreen()) return;
-        if (this.save.questStatus.heroArmor) {
-            console.log("First hero tunic, changing...")
+        if (this.save.questStatus.heroArmor && !this.isFirstTunic) {
+            console.log("First hero tunic, changing...");
             this.save.questStatus.clothing = 47;
             this.isFirstTunic = true;
         }
