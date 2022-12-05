@@ -77,7 +77,7 @@ export class TwilightPrincess implements ICore, API.ITPCore {
             this.touching_loading_zone = false;
             this.last_known_scene = this.global.current_scene_name;
             this.temp = true;
-        }
+        } else if (this.touching_loading_zone && this.global.current_scene_frame > 60 && !this.helper.isLoadingZone()) this.touching_loading_zone = false;
         if (this.global.current_scene_frame === 60) this.temp = false;
         this.eventTicks.forEach((value: Function, key: string) => {
             value();
