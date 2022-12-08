@@ -7,7 +7,7 @@ export interface IStageInfo {
     switches: Buffer;
     items: Buffer;
     keys: number;
-    dungeonItem: number;
+    dungeonItem: Buffer;
 }
 
 export const enum Sword {

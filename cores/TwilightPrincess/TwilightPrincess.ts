@@ -44,6 +44,7 @@ export class TwilightPrincess implements ICore, API.ITPCore {
 
     @Init()
     init(): void {
+        //bus.emit("DOLPHIN_ENABLE_PATCH", 'Hyrule Field Speed Hack');
     }
 
     @Postinit()
@@ -60,11 +61,12 @@ export class TwilightPrincess implements ICore, API.ITPCore {
         this.ModLoader.utils.setIntervalFrames(() => {
 
         }, 600);
+        bus.emit("DOLPHIN_ENABLE_PATCH", 'Hyrule Field Speed Hack');
     }
 
     @onTick()
     onTick() {
-        this.speedhack();
+        //this.speedhack();
         if (this.helper.isTitleScreen() || !this.helper.isSceneNameValid()) return;
         if (this.helper.isLoadingZone() && !this.touching_loading_zone) {
             console.log(`OnLoadingZone()`);

@@ -60,11 +60,10 @@ export class StageInfo extends JSONTemplate implements IStageInfo {
         this.emulator.rdramWrite8(this.stageInfoAddr + (0x20 * this.stageID) + 0x1C, flag);
     }
 
-    get dungeonItem(): number {
-        let bit = this.emulator.rdramRead8(this.stageInfoAddr + (0x20 * this.stageID) + 0x1D);
-        return bit;
+    get dungeonItem(): Buffer {
+        return this.emulator.rdramReadBuffer(this.stageInfoAddr + (0x20 * this.stageID) + 0x1D, 0x1);
     }
-    set dungeonItem(flag: number) {
-        this.emulator.rdramWrite8(this.stageInfoAddr + (0x20 * this.stageID) + 0x1D, flag);
+    set dungeonItem(flag: Buffer) {
+        this.emulator.rdramWriteBuffer(this.stageInfoAddr + (0x20 * this.stageID) + 0x1D, flag);
     }
 }

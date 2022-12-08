@@ -28,7 +28,7 @@ export class WWHelper extends JSONTemplate implements API.ITPHelper {
     }
 
     isTitleScreen(): boolean {
-        return (this.global.current_scene_name === "F_SP102");
+        return (this.global.current_scene_name === "F_SP102" || this.global.current_scene_name === "S_MV000");
     }
 
     isSceneChange(): boolean {
