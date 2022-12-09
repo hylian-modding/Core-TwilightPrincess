@@ -128,17 +128,15 @@ export interface IInventoryFields {
     bombBag2: InventoryItem;
     bombBag3: InventoryItem;
     ooccoo: InventoryItem;
-    sketch_memo: InventoryItem;
+    questItem: InventoryItem;
     fishingRod: InventoryItem;
     horseCall: boolean;
     skyBook: InventoryItem;
-    quiver: number;
     dekuSeeds: number;
     arrows: number;
     bombs1: number;
     bombs2: number;
     bombs3: number;
-    bombCapacity: boolean;
 }
 
 export const enum InventorySlots {
@@ -177,24 +175,23 @@ export const enum InventorySlotItems {
     bow = 4,
     hawkeye = 5,
     ballAndChain = 6,
-    Unknown0 = 7,
+    unknown0 = 7,
     dominionRod = 8,
     clawshot = 9,
     dblClawshot = 10,
-    Bottle1 = 11,
-    Bottle2 = 12,
-    Bottle3 = 13,
-    Bottle4 = 14,
-    Bombs1 = 15,
-    Bombs2 = 16,
-    Bombs3 = 17,
+    bottle1 = 11,
+    bottle2 = 12,
+    bottle3 = 13,
+    bottle4 = 14,
+    bombs1 = 15,
+    bombs2 = 16,
+    bombs3 = 17,
     ooccoo = 18,
-    sketch_memo = 19,
+    questItem = 19,
     fishingRod = 20,
     horseCall = 21,
-    Unknown2 = 22,
+    skyBook = 22,
     slingshot = 23,
-    Unknown3 = 24,
     NONE = 0xFF
 }
 export interface IQuestStatus {
@@ -247,6 +244,16 @@ export interface ISaveContext {
     inventory: IInventory;
     questStatus: IQuestStatus;
     eventFlags: Buffer;
+    charloDonation: number;
+    maloDonation: number;
+    mapFlags: Buffer;
+    itemFlags: Buffer;
+    faronTears: number;
+    eldinTears: number;
+    lanayruTears: number;
+    fusedShadowFlags: Buffer;
+    twilightMirrorFlags: Buffer;
+    letterFlags: Buffer;
     stage_Live: IStageInfo;
     stage0_Ordon: IStageInfo;
     stage1_Sewers: IStageInfo;

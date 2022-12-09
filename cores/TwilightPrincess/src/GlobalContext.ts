@@ -23,7 +23,7 @@ export class GlobalContext extends JSONTemplate implements API.IGlobalContext {
         let rawName = this.emulator.rdramReadBuffer(0x8040AFC0, 0x8).toString();
         let realName = "NULL";
         for (let i = 0; i < this.sceneNames.length; i++) {
-            if (rawName.startsWith(this.sceneNames[i], 0)) realName = this.sceneNames[i];
+            if (rawName.indexOf(this.sceneNames[i]) !== -1) realName = this.sceneNames[i];
         }
         return realName;
     }
@@ -57,7 +57,7 @@ export class GlobalContext extends JSONTemplate implements API.IGlobalContext {
     set time(flag: number) {
         this.emulator.rdramWriteF32(0x804061F4, flag);
     }
-    
+
     getSaveDataForCurrentScene(): Buffer {
         return this.emulator.rdramReadBuffer(0x804063B0 + (this.current_stage_id * 0x20), 0x20);
     }
@@ -69,42 +69,49 @@ export class GlobalContext extends JSONTemplate implements API.IGlobalContext {
     }
 
     sceneNames = [
+        "D_MN00",
+        "D_MN00A",
         "D_MN01",
         "D_MN01A",
         "D_MN01B",
-        "D_MN04 ",
+        "D_MN02",
+        "D_MN03",
+        "D_MN04",
         "D_MN04A",
         "D_MN04B",
-        "D_MN05 ",
+        "D_MN05",
         "D_MN05A",
         "D_MN05B",
-        "D_MN06 ",
+        "D_MN06",
         "D_MN06A",
         "D_MN06B",
-        "D_MN07 ",
+        "D_MN07",
         "D_MN07A",
         "D_MN07B",
-        "D_MN08 ",
+        "D_MN08",
         "D_MN08A",
         "D_MN08B",
         "D_MN08C",
         "D_MN08D",
-        "D_MN09 ",
+        "D_MN09",
         "D_MN09A",
         "D_MN09B",
         "D_MN09C",
-        "D_MN10 ",
+        "D_MN10",
         "D_MN10A",
         "D_MN10B",
-        "D_MN11 ",
+        "D_MN11",
         "D_MN11A",
         "D_MN11B",
-        "D_SB00 ",
+        "D_MN54",
+        "D_MN54A",
+        "D_MN99A",
+        "D_SB00",
         "D_SB01",
         "D_SB02",
         "D_SB03",
         "D_SB04",
-        "D_SB07",
+        "D_SB05",
         "D_SB06",
         "D_SB07",
         "D_SB08",

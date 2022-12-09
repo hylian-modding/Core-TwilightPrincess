@@ -59,6 +59,16 @@ export class SaveContext extends JSONTemplate implements API.ISaveContext {
         "inventory",
         'questStatus',
         "eventFlags",
+        "charloDonation",
+        "maloDonation",
+        "mapFlags",
+        "itemFlags",
+        "faronTears",
+        "eldinTears",
+        "lanayruTears",
+        "fusedShadowFlags",
+        "twilightMirrorFlags",
+        "letterFlags",
         "stage_Live",
         "stage0_Ordon",
         "stage1_Sewers",
@@ -137,9 +147,79 @@ export class SaveContext extends JSONTemplate implements API.ISaveContext {
     }
 
     get eventFlags(): Buffer {
-        return this.emulator.rdramReadBuffer(this.eventFlagAddr, 0x100);
+        return this.emulator.rdramReadBuffer(this.eventFlagAddr, 0xF0); // Bytes 0xF1 - 0x100 aren't bitfields..?
     }
     set eventFlags(flag: Buffer) {
         this.emulator.rdramWriteBuffer(this.eventFlagAddr, flag);
+    }
+
+    get mapFlags(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804067B0, 0x200);
+    }
+    set mapFlags(flag: Buffer){
+        this.emulator.rdramWriteBuffer(0x804067B0, flag);
+    }
+
+    get itemFlags(): Buffer {
+        return this.emulator.rdramReadBuffer(0x8040628C, 0x20);
+    }
+    set itemFlags(flag: Buffer){
+        this.emulator.rdramWriteBuffer(0x8040628C, flag);
+    }
+
+    get faronTears(): number {
+        return this.emulator.rdramRead8(0x804062D4);
+    }
+    set faronTears(flag: number) {
+        this.emulator.rdramWrite8(0x804062D4, flag);
+    }
+
+    get eldinTears(): number {
+        return this.emulator.rdramRead8(0x804062D5);
+    }
+    set eldinTears(flag: number) {
+        this.emulator.rdramWrite8(0x804062D5, flag);
+    }
+
+    get lanayruTears(): number {
+        return this.emulator.rdramRead8(0x804062D6);
+    }
+    set lanayruTears(flag: number) {
+        this.emulator.rdramWrite8(0x804062D6, flag);
+    }
+
+    get fusedShadowFlags(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804062C9, 0x1);
+    } 
+    set fusedShadowFlags(flag: Buffer) {
+        this.emulator.rdramWriteBuffer(0x804062C9, flag);
+    }
+
+    get twilightMirrorFlags(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804062CA, 0x1);
+    } 
+    set twilightMirrorFlags(flag: Buffer) {
+        this.emulator.rdramWriteBuffer(0x804062CA, flag);
+    }
+
+    get letterFlags(): Buffer {
+        return this.emulator.rdramReadBuffer(0x804062DC, 0x50);
+    }
+    set letterFlags(flag: Buffer) {
+        this.emulator.rdramWriteBuffer(0x804062DC, flag);
+    }
+
+    get charloDonation(): number {
+        return this.emulator.rdramRead16(0x80406AA7);
+    }
+    set charloDonation(flag: number) {
+        this.emulator.rdramWrite16(0x80406AA7, flag);
+    }
+
+    get maloDonation(): number {
+        return this.emulator.rdramRead16(0x80406AA9);
+    }
+    set maloDonation(flag: number) {
+        this.emulator.rdramWrite16(0x80406AA9, flag);
     }
 }
