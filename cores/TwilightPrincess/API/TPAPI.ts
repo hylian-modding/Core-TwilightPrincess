@@ -205,6 +205,7 @@ export interface IQuestStatus {
     currentWallet: number;
     ordonSword: boolean;
     masterSword: boolean;
+    masterSwordTwilightFlag: boolean;
     ordonShield: boolean;
     woodenShield: boolean;
     hylianShield: boolean;

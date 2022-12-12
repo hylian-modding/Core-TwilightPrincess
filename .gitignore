@@ -6,3 +6,6 @@ node_modules/
 package-lock.json
 roms/
 modloader64-config.json
+ModLoader64-config-player1.json
+ModLoader64-config-player2.json
+src/cheatmenu.pak

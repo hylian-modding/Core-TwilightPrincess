@@ -127,6 +127,13 @@ export class QuestStatus extends JSONTemplate implements API.IQuestStatus {
         this.emulator.rdramWriteBit8(0x80406292, 6, flag);
     }
 
+    get masterSwordTwilightFlag(): boolean {
+        return this.emulator.rdramReadBit8(0x80406296, 1);
+    }
+    set masterSwordTwilightFlag(flag: boolean){
+        this.emulator.rdramWriteBit8(0x80406296, 1, flag);
+    }
+
     get ordonShield(): boolean {
         return this.emulator.rdramReadBit8(0x80406292, 5);
     }

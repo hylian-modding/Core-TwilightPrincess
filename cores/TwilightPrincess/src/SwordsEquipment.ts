@@ -33,12 +33,6 @@ export class SwordsEquipment extends JSONTemplate implements ISwords {
     }
   }
 
-  /*   803C4C16,1 - Currently equipped swor
-    38 - Hero's Sword
-    39 - Master Sword (Powerless)
-    3A - Master Sword (Half Power)
-    3E - Master Sword (Full Power) */
-
   set swordLevel(level: Sword) {
     let bits = this.emulator.rdramReadBits8(0x80406292);
     switch (level) {

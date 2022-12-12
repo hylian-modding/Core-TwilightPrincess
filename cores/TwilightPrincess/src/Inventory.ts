@@ -112,7 +112,8 @@ export class Inventory extends JSONTemplate implements API.IInventory {
         if (bool) {
             this.addItemSlot(InventorySlotItems.lantern);
             //Lamp Oil
-            this.emulator.rdramWrite16(0x804061C8, 0x5460);
+            this.emulator.rdramWrite16(0x804061C6, 0x5460); // Max size
+            this.emulator.rdramWrite16(0x804061C8, 0x5460); // Current amount
         }
     }
 
