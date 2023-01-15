@@ -1,4 +1,3 @@
-mkdir -p $PREFIX/bin
-mkdir -p $PREFIX/bin/client
-mkdir -p $PREFIX/bin/client/mods
-cp -r ./TwilightPrincess $PREFIX/bin/client/mods
+mkdir -p $PREFIX/client
+mkdir -p $PREFIX/client/cores
+cp ./TwilightPrincess/TwilightPrincess.pak $PREFIX/client/cores/TwilightPrincess.pak
