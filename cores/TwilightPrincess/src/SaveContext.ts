@@ -111,39 +111,39 @@ export class SaveContext extends JSONTemplate implements API.ISaveContext {
         this.inventory = new CORE.Inventory(emu);
         this.questStatus = new CORE.QuestStatus(emu, core);
 
-        this.stage_Live = new StageInfo(emu, core, 0x0, 0x80406B18);
-        this.stage0_Ordon = new StageInfo(emu, core, 0x0);
-        this.stage1_Sewers = new StageInfo(emu, core, 0x1);
-        this.stage2_Faron = new StageInfo(emu, core, 0x2);
-        this.stage3_Eldin = new StageInfo(emu, core, 0x3);
-        this.stage4_Laynaru = new StageInfo(emu, core, 0x4);
-        this.stage5_Unk1 = new StageInfo(emu, core, 0x5);
-        this.stage6_CastleField = new StageInfo(emu, core, 0x6);
-        this.stage7_SacredGrove = new StageInfo(emu, core, 0x7);
-        this.stage8_Snowpeak = new StageInfo(emu, core, 0x8);
-        this.stage9_CastleTown = new StageInfo(emu, core, 0x9);
-        this.stageA_Gerudo = new StageInfo(emu, core, 0xA);
-        this.stageB_FishingHole = new StageInfo(emu, core, 0xB);
-        this.stageC_Unk2 = new StageInfo(emu, core, 0xC);
-        this.stageD_Unk3 = new StageInfo(emu, core, 0xD);
-        this.stageE_Unk4 = new StageInfo(emu, core, 0xE);
-        this.stageF_Unk5 = new StageInfo(emu, core, 0xF);
-        this.stage10_ForestTemple = new StageInfo(emu, core, 0x10);
-        this.stage11_GoronMines = new StageInfo(emu, core, 0x11);
-        this.stage12_LakebedTemple = new StageInfo(emu, core, 0x12);
-        this.stage13_ArbitersGrounds = new StageInfo(emu, core, 0x13);
-        this.stage14_SnowpeakRuins = new StageInfo(emu, core, 0x14);
-        this.stage15_TempleOfTime = new StageInfo(emu, core, 0x15);
-        this.stage16_CitySky = new StageInfo(emu, core, 0x16);
-        this.stage17_PalaceTwilight = new StageInfo(emu, core, 0x17);
-        this.stage18_HyruleCastle = new StageInfo(emu, core, 0x18);
-        this.stage19_Cave1 = new StageInfo(emu, core, 0x19);
-        this.stage1A_Cave2 = new StageInfo(emu, core, 0x1A);
-        this.stage1B_Grottos = new StageInfo(emu, core, 0x1B);
-        this.stage1C_Unk6 = new StageInfo(emu, core, 0x1C);
-        this.stage1D_Unk7 = new StageInfo(emu, core, 0x1D);
-        this.stage1E_Unk8 = new StageInfo(emu, core, 0x1E);
-        this.stage1F_Unk9 = new StageInfo(emu, core, 0x1F);
+        this.stage_Live = new StageInfo(emu, 0x0, 0x80406B18);
+        this.stage0_Ordon = new StageInfo(emu, 0x0);
+        this.stage1_Sewers = new StageInfo(emu, 0x1);
+        this.stage2_Faron = new StageInfo(emu, 0x2);
+        this.stage3_Eldin = new StageInfo(emu, 0x3);
+        this.stage4_Laynaru = new StageInfo(emu, 0x4);
+        this.stage5_Unk1 = new StageInfo(emu, 0x5);
+        this.stage6_CastleField = new StageInfo(emu, 0x6);
+        this.stage7_SacredGrove = new StageInfo(emu, 0x7);
+        this.stage8_Snowpeak = new StageInfo(emu, 0x8);
+        this.stage9_CastleTown = new StageInfo(emu, 0x9);
+        this.stageA_Gerudo = new StageInfo(emu, 0xA);
+        this.stageB_FishingHole = new StageInfo(emu, 0xB);
+        this.stageC_Unk2 = new StageInfo(emu, 0xC);
+        this.stageD_Unk3 = new StageInfo(emu, 0xD);
+        this.stageE_Unk4 = new StageInfo(emu, 0xE);
+        this.stageF_Unk5 = new StageInfo(emu, 0xF);
+        this.stage10_ForestTemple = new StageInfo(emu, 0x10);
+        this.stage11_GoronMines = new StageInfo(emu, 0x11);
+        this.stage12_LakebedTemple = new StageInfo(emu, 0x12);
+        this.stage13_ArbitersGrounds = new StageInfo(emu, 0x13);
+        this.stage14_SnowpeakRuins = new StageInfo(emu, 0x14);
+        this.stage15_TempleOfTime = new StageInfo(emu, 0x15);
+        this.stage16_CitySky = new StageInfo(emu, 0x16);
+        this.stage17_PalaceTwilight = new StageInfo(emu, 0x17);
+        this.stage18_HyruleCastle = new StageInfo(emu, 0x18);
+        this.stage19_Cave1 = new StageInfo(emu, 0x19);
+        this.stage1A_Cave2 = new StageInfo(emu, 0x1A);
+        this.stage1B_Grottos = new StageInfo(emu, 0x1B);
+        this.stage1C_Unk6 = new StageInfo(emu, 0x1C);
+        this.stage1D_Unk7 = new StageInfo(emu, 0x1D);
+        this.stage1E_Unk8 = new StageInfo(emu, 0x1E);
+        this.stage1F_Unk9 = new StageInfo(emu, 0x1F);
     }
 
     get eventFlags(): Buffer {
@@ -156,14 +156,14 @@ export class SaveContext extends JSONTemplate implements API.ISaveContext {
     get mapFlags(): Buffer {
         return this.emulator.rdramReadBuffer(0x804067B0, 0x200);
     }
-    set mapFlags(flag: Buffer){
+    set mapFlags(flag: Buffer) {
         this.emulator.rdramWriteBuffer(0x804067B0, flag);
     }
 
     get itemFlags(): Buffer {
         return this.emulator.rdramReadBuffer(0x8040628C, 0x20);
     }
-    set itemFlags(flag: Buffer){
+    set itemFlags(flag: Buffer) {
         this.emulator.rdramWriteBuffer(0x8040628C, flag);
     }
 
@@ -190,14 +190,14 @@ export class SaveContext extends JSONTemplate implements API.ISaveContext {
 
     get fusedShadowFlags(): Buffer {
         return this.emulator.rdramReadBuffer(0x804062C9, 0x1);
-    } 
+    }
     set fusedShadowFlags(flag: Buffer) {
         this.emulator.rdramWriteBuffer(0x804062C9, flag);
     }
 
     get twilightMirrorFlags(): Buffer {
         return this.emulator.rdramReadBuffer(0x804062CA, 0x1);
-    } 
+    }
     set twilightMirrorFlags(flag: Buffer) {
         this.emulator.rdramWriteBuffer(0x804062CA, flag);
     }

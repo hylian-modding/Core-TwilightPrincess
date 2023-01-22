@@ -1,6 +1,7 @@
 import { Heap } from 'modloader64_api/heap';
 import { ICore } from 'modloader64_api/IModLoaderAPI';
 import { IPacketHeader } from 'modloader64_api/NetworkHandler';
+import { StageInfo } from '../src/StageInfo';
 
 export interface IStageInfo {
     chests: Buffer;
@@ -239,6 +240,8 @@ export interface IGlobalContext {
     time: number;
     getSaveDataForCurrentScene(): Buffer;
     writeSaveDataForCurrentScene(buf: Buffer): void;
+    getSaveDataForScene(id: number): StageInfo;
+    writeSaveDataForScene(id: number, buf: StageInfo): void;
 }
 
 export interface ISaveContext {

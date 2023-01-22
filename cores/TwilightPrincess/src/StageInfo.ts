@@ -8,7 +8,6 @@ import { IStageInfo, ITPCore } from "../API/Imports";
 
 export class StageInfo extends JSONTemplate implements IStageInfo {
     private emulator: IMemory;
-    private core: ITPCore;
     private dSv_info_c = 0x804061C0;
     private stageInfoAddr = this.dSv_info_c + 0x1F0;
     private stageID: number;
@@ -22,10 +21,9 @@ export class StageInfo extends JSONTemplate implements IStageInfo {
         "dungeonItem"
     ];
 
-    constructor(emu: IMemory, core: ITPCore, stageID: number, instance?: number) {
+    constructor(emu: IMemory, stageID: number, instance?: number) {
         super();
         this.emulator = emu;
-        this.core = core;
         this.stageID = stageID;
         if (instance !== undefined) {
             this.stageInfoAddr = instance;

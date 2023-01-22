@@ -2,6 +2,7 @@ import IMemory from 'modloader64_api/IMemory';
 import * as API from '../API/Imports'
 import { JSONTemplate } from 'modloader64_api/JSONTemplate';
 import { IModLoaderAPI } from 'modloader64_api/IModLoaderAPI';
+import { StageInfo } from './StageInfo';
 
 export class GlobalContext extends JSONTemplate implements API.IGlobalContext {
     private emulator: IMemory;
@@ -63,9 +64,26 @@ export class GlobalContext extends JSONTemplate implements API.IGlobalContext {
     }
 
     writeSaveDataForCurrentScene(buf: Buffer): void {
-        if (buf.byteLength === 0x20) {
-            this.emulator.rdramWriteBuffer(0x804063B0 + (this.current_stage_id * 0x20), buf);
-        }
+        this.emulator.rdramWriteBuffer(0x804063B0 + (this.current_stage_id * 0x20), buf);
+    }
+
+    getSaveDataForScene(id: number): StageInfo {
+        let stageInfo = new StageInfo(this.emulator, id);
+        stageInfo.chests = this.emulator.rdramReadBuffer(0x804063B0 + (id * 0x20), 0x8);
+        stageInfo.switches = this.emulator.rdramReadBuffer(0x804063B0 + (id * 0x20) + 0x8, 0x10);
+        stageInfo.items = this.emulator.rdramReadBuffer(0x804063B0 + (id * 0x20) + 0x18, 0x4);
+        stageInfo.keys = this.emulator.rdramRead8(0x804063B0 + (id * 0x20) + 0x1C);
+        stageInfo.dungeonItem = this.emulator.rdramReadBuffer(0x804063B0 + (id * 0x20) + 0x1D, 0x1);
+
+        return stageInfo;
+    }
+
+    writeSaveDataForScene(id: number, buf: StageInfo): void {
+        this.emulator.rdramWriteBuffer(0x804063B0 + (id * 0x20), buf.chests);
+        this.emulator.rdramWriteBuffer(0x804063B0 + (id * 0x20) + 0x8, buf.switches);
+        this.emulator.rdramWriteBuffer(0x804063B0 + (id * 0x20) + 0x18, buf.items);
+        this.emulator.rdramWrite8(0x804063B0 + (id * 0x20) + 0x1C, buf.keys);
+        this.emulator.rdramWriteBuffer(0x804063B0 + (id * 0x20) + 0x1D, buf.dungeonItem);
     }
 
     sceneNames = [
